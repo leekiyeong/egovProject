@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Board1Space">
+
+	<typeAlias  alias="egovMap" type="org.egovframe.rte.psl.dataaccess.util.EgovMap"/>
+	<typeAlias  alias="searchVO" type="egovframework.example.sample.service.SampleDefaultVO"/>
+	<typeAlias  alias="board1VO" type="egov.mywork1.service.Board1VO"/>
+	
+	<insert id="board1DAO.insertBoard1">
+		INSERT INTO BOARD1(unq
+				          ,title	<!-- 제목 -->
+				          ,pass		<!-- 암호 -->
+				          ,name		<!-- 이름 -->
+				          ,content	<!-- 내용 -->
+				          ,rdate
+				          ,udate)
+				VALUES( board1_seq.nextval
+					   ,#title#
+					   ,#pass#
+					   ,#name#
+					   ,#content#
+					   ,sysdate
+					   ,sysdate)
+	</insert>
+	
+	<select id ="board1DAO.selectBoard1List" resultClass="egovMap">
+	SELECT b.* FROM(
+		SELECT rownum rn, a.* FROM(
+			SELECT unq
+			  	  ,title
+			  	  ,name
+			  	  ,hits
+			  	  ,to_char(rdate,'yyyy-mm-dd') rdate
+			 FROM board1
+			 ORDER BY unq DESC)a)b WHERE
+				rn BETWEEN $firstIndex$ AND $lastIndex$
+			   <!--$firstIndex$ AND $lastIndex$  -->
+	</select>
+	
+	<select id ="board1DAO.selectBoard1Total" resultClass="int">
+	
+		select count(*) total from board1
+		
+	</select>
+	
+	<!--  <select id="cmsDAO.selectCmsList" resultClass = "egovMap">
+		SELECT * FROM CMS
+	</select>
+	<select id = "cmsDAO.selectCmsTotal" resultClass = "int">
+		SELECT count(*) FROM CMS
+	</select>
+	<delete id = "cmsDAO.deleteCms">
+		DELETE FROM CMS WHERE cms_no = #cms_no#
+	</delete>
+	<select id = "cmsDAO.selectCmsDetail" resultClass = "cmsVO">
+		SELECT CMS_NO,CMS_NM,CMS_YN FROM CMS
+			WHERE cms_no = #cms_no#
+	</select>
+	<update id = "cmsDAO.updateCms">
+		UPDATE CMS SET CMS_NM = #cms_nm#,CMS_YN = #cms_yn#
+			WHERE CMS_NO = #cms_no#
+	</update>
+	-->
+	
+</sqlMap>
